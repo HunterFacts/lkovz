@@ -1,0 +1,42 @@
+@import './scss/_materialize.scss';
+@import './scss/_fonts.scss';
+
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer, .page-footer, nav {
+    background-color: #0288d1; 
+}
+.page-footer {
+    padding-top: 0;
+}
+.dropdown-content li>a, .dropdown-content li>span {
+    color: #0288d1;
+}
+.auth-main {
+    
+    &>.row {
+        height: calc(100vh - 50px);
+        margin-bottom: 0;
+        &>div {
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -70%);
+            .card {
+                border-radius: 15px 15px 0 0;
+                .card-image {
+                    border-radius: 15px 15px 0 0;
+                }
+            }
+            
+        }
+    }
+}
