@@ -9102,7 +9102,7 @@ main {
   flex: 1 0 auto;
 }
 
-footer, .page-footer, nav {
+footer, .page-footer, nav, .btn {
   background-color: #0288d1;
 }
 
@@ -9131,4 +9131,18 @@ footer, .page-footer, nav {
 
 .auth-main > .row > div .card .card-image {
   border-radius: 15px 15px 0 0;
+}
+
+.field-name {
+  font-weight: bold;
+}
+
+.btn-field-data {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.btn-field-data:hover, .btn-field-data:focus, .btn-field-data:active {
+  background-color: white;
+  color: black;
 }
