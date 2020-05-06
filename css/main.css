@@ -9114,6 +9114,34 @@ footer, .page-footer, nav, .btn {
   color: #0288d1;
 }
 
+.btn:hover, .btn:focus, .btn:active {
+  background-color: white;
+  color: black;
+}
+
+.rssa-main {
+  background-color: #bdbdbd;
+  display: flex;
+  justify-content: center;
+}
+
+.rssa-main .card-authrss {
+  top: 50%;
+  max-width: 450px;
+  position: absolute;
+  transform: translate(0, -75%);
+  padding: 40px 40px;
+}
+
+.rssa-main .card-authrss h6 {
+  color: #757575;
+  font-weight: bold;
+}
+
+.rssa-main .card-authrss span {
+  color: #757575;
+}
+
 .auth-main > .row {
   height: calc(100vh - 50px);
   margin-bottom: 0;
@@ -9140,9 +9168,4 @@ footer, .page-footer, nav, .btn {
 .btn-field-data {
   display: inline-block;
   margin-left: 20px;
-}
-
-.btn-field-data:hover, .btn-field-data:focus, .btn-field-data:active {
-  background-color: white;
-  color: black;
 }

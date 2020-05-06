@@ -21,6 +21,31 @@ footer, .page-footer, nav, .btn {
 .dropdown-content li>a, .dropdown-content li>span {
     color: #0288d1;
 }
+.btn {
+    &:hover,&:focus,&:active {
+        background-color: white;
+        color: black;
+    }
+}
+.rssa-main {
+    background-color: #bdbdbd;
+    display: flex;
+    justify-content: center;
+    .card-authrss {
+        top: 50%;
+        max-width: 450px;
+        position: absolute;
+        transform: translate(0, -75%);
+        padding: 40px 40px;
+        h6 {
+            color: #757575;
+            font-weight: bold;
+        }
+        span {
+            color: #757575;
+        }
+    }
+}
 .auth-main {
     
     &>.row {
@@ -46,8 +71,4 @@ footer, .page-footer, nav, .btn {
 .btn-field-data {
     display: inline-block;
     margin-left: 20px;
-    &:hover,&:focus,&:active {
-        background-color: white;
-        color: black;
-    }
 }
