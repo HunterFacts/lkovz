@@ -9169,3 +9169,19 @@ footer, .page-footer, nav, .btn {
   display: inline-block;
   margin-left: 20px;
 }
+
+.table-block {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 240px);
+}
+
+.table-block-editform {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-width: 100%;
+  max-height: calc(20vh);
+}
