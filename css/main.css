@@ -9179,7 +9179,7 @@ footer, .page-footer, nav, .btn {
   overflow-x: auto;
   overflow-y: auto;
   max-width: 100%;
-  max-height: calc(100vh - 240px);
+  max-height: calc(100vh - 280px);
 }
 
 .table-block-editform {
@@ -9187,7 +9187,7 @@ footer, .page-footer, nav, .btn {
   overflow-x: auto;
   overflow-y: auto;
   max-width: 100%;
-  max-height: calc(20vh);
+  max-height: calc(15vh);
 }
 
 .two-nav {
