@@ -27,6 +27,9 @@ footer, .page-footer, nav, .btn {
         color: black;
     }
 }
+.page-footer .footer-copyright {
+    min-height: 40px;
+}
 .rssa-main {
     background-color: #bdbdbd;
     display: flex;
@@ -85,4 +88,47 @@ footer, .page-footer, nav, .btn {
     overflow-y: auto;
     max-width: 100%;
     max-height: calc(20vh);
+}
+.two-nav {
+    height: 40px;
+        line-height: 40px;
+    .nav-wrapper {
+        position: relative;
+        max-width: 1200px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 26px;
+        height: 40px;
+        line-height: 40px;
+        i {
+            height: 40px;
+            line-height: 40px;
+        }
+    }
+}
+.main-nav {
+    background-color: white;
+    color: black;
+    .nav-wrapper {
+        position: relative;
+        max-width: 1172px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 26px;
+        a.brand-logo {
+            text-align: left;
+            color: black;
+            line-height: 20px;
+            font-size: 18px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            background: url(../img/logo.svg);
+            background-repeat: no-repeat;
+            background-position: left;
+            background-size: contain;
+            padding-left: 64px;
+        }
+    }
 }
