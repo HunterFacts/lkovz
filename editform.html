@@ -25,7 +25,7 @@
     <nav class="two-nav">
         <div class="nav-wrapper">
             <ul class="left hide-on-med-and-down">
-                <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons">menu</i></a></li>
+                <li><a class="dropdown-trigger" id="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons">menu</i></a></li>
                 <li><a href=""><i class="material-icons left">account_box</i>Личный кабинет родителя учащегося с ОВЗ</a></li>
             </ul>
             <ul class="right hide-on-med-and-down">
@@ -46,22 +46,22 @@
             <span class="field-name">Информация о психолого-педагогическом сопровождении ребенка: </span><br><br>
             <div class="row">
                 <div class="col s11 offset-s1">
-                    <div class="table-block-editform">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Должность специалиста</th>
-                                    <th>Часов в неделю</th>
-                                </tr>
-                            </thead>
-                    
-                            <tbody class="tbody-worker-table">
-                                <tr>
-                                    <td>Тьютор</td>
-                                    <td>4</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div id="table-info" class="table-container">
+                        <div class="table-block table-block-editform">
+                            <table></table>
+                        </div>
+                        <div class="pagination-main-container">
+                            <div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>
+                            <div class="input-field pagination-select-container">
+                                <select class="pagination-select">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="50">50</option>
+                                </select>
+                                <label></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,24 +69,22 @@
             <span class="field-name">Результаты освоения Адаптированной Образовательной Программы: </span><br><br>
             <div class="row">
                 <div class="col s11 offset-s1">
-                    <div class="table-block-editform">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Результаты освоения</th>
-                                    <th>Учебный год</th>
-                                    <th>Образовательная организация</th>
-                                </tr>
-                            </thead>
-                    
-                            <tbody class="tbody-yearroad-table">
-                                <tr>
-                                    <td>Переведен на следующий год</td>
-                                    <td>2018-2019</td>
-                                    <td>СОШ №1</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div id="table-results" class="table-container">
+                        <div class="table-block table-block-editform">
+                            <table></table>
+                        </div>
+                        <div class="pagination-main-container">
+                            <div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>
+                            <div class="input-field pagination-select-container">
+                                <select class="pagination-select">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="50">50</option>
+                                </select>
+                                <label></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,22 +92,22 @@
             <span class="field-name">Файлы Адаптированной Образовательной Программы: </span><br><br>
             <div class="row">
                 <div class="col s11 offset-s1">
-                    <div class="table-block-editform">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Файл</th>
-                                    <th>Ссылка</th>
-                                </tr>
-                            </thead>
-                    
-                            <tbody class="tbody-files-table">
-                                <tr>
-                                    <td>file1</td>
-                                    <td><button class="btn">Скачать</button><br></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div id="table-files" class="table-container">
+                        <div class="table-block table-block-editform">
+                            <table></table>
+                        </div>
+                        <div class="pagination-main-container">
+                            <div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>
+                            <div class="input-field pagination-select-container">
+                                <select class="pagination-select">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="50">50</option>
+                                </select>
+                                <label></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,39 +127,54 @@
 <script src="js/materialize.js"></script>
 <script src="js/main.js"></script>
 <script>
-    function initTest(){
-        countValues = 100;
+    function initTestData(countValues, count){
+        let arrData = [];
         while (countValues > 0){
-            $('.tbody-worker-table').append(
-                '<tr>'
-                    +'<td>Тьютор</td>'
-                    +'<td>'+countValues+'</td>'
-                +'</tr>'
-            );
-            $('.tbody-yearroad-table').append(
-                '<tr>'
-                    +'<td>Переведен на следующий год</td>'
-                    +'<td>2018-2019</td>'
-                    +'<td>СОШ №'+countValues+'</td>'
-                +'</tr>'
-            );
-            $('.tbody-files-table').append(
-                '<tr>'
-                    +'<td>file'+countValues+'</td>'
-                    +'<td><button class="btn">Скачать</button><br></td>'
-                +'</tr>'
-            );
+            if (count == 1){
+                arrData.push({
+                    status: countValues % 2 == 0 ? "Тьютор" : 'Не тьютор',
+                    countHour: countValues,
+                    id: countValues
+                })
+            }
+            else if(count == 2) {
+                arrData.push({
+                    results: 'Переведен на следующий год',
+                    year: '2018-2019',
+                    educationalInstitution: 'СОШ №'+countValues,
+                    id: countValues
+                })
+            }
+            else {
+                arrData.push({
+                    status: 'file'+countValues,
+                    countHour: 'link',
+                    id: countValues
+                })
+            }
+            
             countValues = countValues - 1;
         }
+        return arrData;
     }
-    initTest();
-    $(function() {
-        function fixSize() {
-            $('tbody').css('height', $('table').parent().height() - $('thead').height() + 'px');  
-        }
-        
-        $(document).ready(fixSize);
-        $(window).resize(fixSize);
-    });
+    let view = [
+        {name:'status',text:"Должность специалиста", type:"text", func: null},
+        {name:'countHour',text:"Часов в неделю", type:"text", func: null},
+    ],
+    table1 = new TableForm('#table-info', view, false);
+    table1.buildAdnRenderData(initTestData(45, 1).reverse());
+    view = [
+        {name:'results',text:"Результаты освоения", type:"text", func: null},
+        {name:'year',text:"Учебный год", type:"text", func: null},
+        {name:'educationalInstitution',text:"Образовательное учреждение", type:"text", func: null},
+    ];
+    let table2 = new TableForm('#table-results', view, false);
+    table2.buildAdnRenderData(initTestData(80, 2).reverse());
+    view = [
+        {name:'file',text:"Файл", type:"text", func: null},
+        {name:'link',text:"Ссылка", type:"button", func: null},
+    ];
+    let table3 = new TableForm('#table-files', view, false);
+    table3.buildAdnRenderData(initTestData(150, 3).reverse());
 </script>
 </html>

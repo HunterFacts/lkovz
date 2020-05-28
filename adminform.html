@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="font/stylesheet.css">
+    <link rel="stylesheet" href="css/main.min.css" class="notranslate">
+
+    <title>ЛК ОВЗ</title>
+</head>
+<body>
+    <ul id="dropdown1" class="dropdown-content dynamic-dropdown-content">
+        <li><a href="listform.html">Списковая форма</a></li>
+        <li><a href="editform.html">Форма редактирования</a></li>
+        <li><a href="login.html">Логин</a></li>
+        <li class="divider"></li>
+    </ul>
+    <nav class="main-nav">
+        <div class="nav-wrapper">
+            <a href="index.html" class="brand-logo left">Единый портал <br>пермского образования</a>
+        </div>
+    </nav>
+    <nav class="two-nav">
+        <div class="nav-wrapper">
+            <ul class="left hide-on-med-and-down">
+                <li><a class="dropdown-trigger" id="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons">menu</i></a></li>
+                <li><a href=""><i class="material-icons left">account_box</i>Личный кабинет родителя учащегося с ОВЗ</a></li>
+            </ul>
+            <ul class="right hide-on-med-and-down">
+                <li><a href=""><i class="material-icons right">view_module</i>ФИО родителя</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div id="createPasswordModal" class="modal modal-create-pass">
+        <div class="modal-content">
+            <h4>Modal Header</h4>
+            
+        </div>
+        <!--<div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
+        </div>-->
+    </div>
+<main>
+    <div class="row">
+        <div class="col s12 l8 offset-l2">
+            <h4>Учетные данные пользователей</h4>
+            <div class="table-block search-table-container">
+                <table class="search-table">
+                    <thead>
+                        <tr>
+                            <th>ФИО родителя</th>
+                            <th>Телефон</th>
+                            <th>ФИО ребенка</th>
+                            <th>Образовательная организация</th>
+                            <th>Класс</th>
+                            <th>Пароль сформирован</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="input-field field-search-table">
+                                    <input data-columnname='fio' type="text" class="validate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-field field-search-table">
+                                    <input  type="text" class="validate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-field field-search-table">
+                                    <input data-columnname='fioChild' type="text" class="validate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-field field-search-table">
+                                    <input data-columnname='educationalInstitution' type="text" class="validate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-field field-search-table">
+                                    <input data-columnname='class' type="text" class="validate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-field field-search-table">
+                                    <input data-columnname='isPasswordbool' type="text" class="validate">
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-field-data search-button">Найти</button>
+                            </td>
+                            <td>
+                                <button class="btn btn-field-data clear-button">Очистить</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="table-admin" class="table-admin table-container">
+                <button class="btn btn-create-password">Сформировать пароль</button>
+                <div class="table-block table-block-admin">
+                    <table></table>
+                </div>
+                <div class="pagination-main-container">
+                    <div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>
+                    <div class="input-field pagination-select-container">
+                        <select class="pagination-select">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="50">50</option>
+                        </select>
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="page-footer">
+    <div class="footer-copyright">
+        <div class="container">
+        © 2020 Copyright Text
+        </div>
+    </div>
+    </footer>
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/materialize.js"></script>
+<script src="js/main.js"></script>
+<script>
+    function initTestData(countValues){
+        let arrData = [];
+        while (countValues > 0){
+            arrData.push({
+                login: 'IVAN',
+                isPasswordbool: countValues % 2 == 0 ? 'Да' : 'Нет',
+                date: '23.09.2020',
+                fio: countValues % 2 == 0 ? " Иван Иванович И." : 'Денис Денисович Д.',
+                fioChild: 'Сергей Сергеев И.',
+                educationalInstitution: "СОШ №"+countValues,
+                class: "7а",
+                id: countValues
+            })
+            countValues = countValues - 1;
+        }
+        return arrData;
+    }
+    let view = [
+        {name:'login',text:"Логин", type:"text", func: null},
+        {name:'isPasswordbool',text:"Пароль сформирован", type:"text", func: null},
+        {name:'date',text:"Дата загрузки в ЛК", type:"text", func: null},
+        {name:'fio',text:"ФИО Родителя", type:"text", func: null},
+        {name:'fioChild',text:"ФИО ребенка", type:"minitable", func: null},
+        {name:'educationalInstitution',text:"Образовательная организация", type:"text", func: null},
+        {name:'class',text:"Класс", type:"text", func: null},
+    ],
+    table1 = new TableForm('#table-admin', view, true);
+    table1.buildAdnRenderData(initTestData(211).reverse());
+
+    let basicSearch = new BasicSearch('.search-table',table1);
+    $('#createPasswordModal').modal();
+    $('.btn-create-password').click(function() {
+        if (table1.selectedItems.size != 0){
+            if (table1.selectedItems.size == 1) {
+                $('#createPasswordModal').html(
+                '<div class="modal-content">'
+                    +'<p>Для выбранного пользователя был сформирован новый пароль <br> Скопируйте и передайте учетные данные (логин и пароль родителя) пользователю</p>'
+                    +'<div id="table-admin-lookup" class="table-admin">'
+                        +'<div class="table-block table-block-admin">'
+                            +'<table></table>'
+                        +'</div>'
+                        +'<div class="pagination-main-container">'
+                            +'<div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>'
+                            +'<div class="input-field pagination-select-container">'
+                                +'<select class="pagination-select">'
+                                    +'<option value="5">5</option>'
+                                    +'<option value="10">10</option>'
+                                    +'<option value="15">15</option>'
+                                    +'<option value="50">50</option>'
+                                +'</select>'
+                                +'<label></label>'
+                            +'</div>'
+                        +'</div>'
+                    +'</div>'
+                +'</div>'
+                +'<div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-blue btn-flat">Закрыть</a></div>');
+                let view = [
+                    {name:'login',text:"Логин родителя", type:"text", func: null},
+                    {name:'newPassword',text:"Пароль родителя", type:"text", func: null},
+                    {name:'date',text:"Дата загрузки в ЛК", type:"text", func: null},
+                    {name:'fio',text:"ФИО Родителя", type:"text", func: null},
+                    {name:'fioChild',text:"ФИО ребенка", type:"minitable", func: null},
+                    {name:'educationalInstitution',text:"Образовательная организация", type:"text", func: null},
+                    {name:'class',text:"Класс", type:"text", func: null},
+                ],
+                table2 = new TableForm('#table-admin-lookup', view, false);
+                let arrData = [];
+                let onevalue = table1.selectedItems.entries().next().value[1];
+                arrData.push({
+                    login: onevalue.login,
+                    newPassword: '123555324',
+                    date: onevalue.date,
+                    fio: onevalue.fio,
+                    fioChild: onevalue.fioChild,
+                    educationalInstitution: onevalue.educationalInstitution,
+                    class: onevalue.class,
+                    id: onevalue.id
+                });
+                table2.buildAdnRenderData(arrData);
+            }
+            else {
+                $('#createPasswordModal').html('<div class="modal-content"><div class="modal-flex"><h5>Вы действительно хотите сформировать новые пароли для всех выбранных пользователей</h5></div>'
+                +'<div class="modal-flex"><button class="btn btn-access">Да</button><button class="btn btn-no-access">Нет</button></div>'
+                +'</div>');
+                $('#createPasswordModal .btn-access').click(function(){
+                    M.toast({html: "Данные выгружены в xml"});
+                    $('#createPasswordModal').modal('close');
+                });
+                $('#createPasswordModal .btn-no-access').click(function(){
+                    M.toast({html: "Отмена операции"});
+                    $('#createPasswordModal').modal('close');
+                });
+            }
+        }
+        else {
+            $('#createPasswordModal').html('<div class="modal-content"><h3>Ошибка! Не выбран не один пользователь</h3></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-blue btn-flat">Закрыть</a></div>')
+        }
+        $('#createPasswordModal').modal('open');
+    });
+</script>
+</html>

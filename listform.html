@@ -25,7 +25,7 @@
     <nav class="two-nav">
         <div class="nav-wrapper">
             <ul class="left hide-on-med-and-down">
-                <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons">menu</i></a></li>
+                <li><a class="dropdown-trigger" id="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons">menu</i></a></li>
                 <li><a href=""><i class="material-icons left">account_box</i>Личный кабинет родителя учащегося с ОВЗ</a></li>
             </ul>
             <ul class="right hide-on-med-and-down">
@@ -37,32 +37,23 @@
     <div class="row">
         <div class="col s12 l8 offset-l2">
             <h3>Учащиеся с ОВЗ</h3>
-            <div class="table-block">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ФИО</th>
-                            <th>Образовательное учреждение</th>
-                            <th>Подразделение</th>
-                        </tr>
-                    </thead>
-            
-                    <tbody class="tbody-student-table">
-                        <tr>
-                            <td>Иван Иванович И.</td>
-                            <td>СОШ №1</td>
-                            <td>7а</td>
-                        </tr>
-                        <tr>
-                            <td>Иван Иванович И.</td>
-                            <td>СОШ №1</td>
-                            <td>7а</td>
-                        </tr>
-                        
-                    </tbody>
-                </table>
+            <div id="table-student" class="table-student table-container">
+                <div class="table-block table-block-student">
+                    <table></table>
+                </div>
+                <div class="pagination-main-container">
+                    <div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>
+                    <div class="input-field pagination-select-container">
+                        <select class="pagination-select">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="50">50</option>
+                        </select>
+                        <label></label>
+                    </div>
+                </div>
             </div>
-
         </div>
     </div>
 </main>
@@ -79,19 +70,25 @@
 <script src="js/materialize.js"></script>
 <script src="js/main.js"></script>
 <script>
-    function initTest(){
-        countValues = 100;
+    function initTestData(countValues){
+        let arrData = [];
         while (countValues > 0){
-            $('.tbody-student-table').append(
-                '<tr>'
-                    +'<td>Иван Иванович И.</td>'
-                    +'<td>СОШ №1</td>'
-                    +'<td>7а</td>'
-                +'</tr>'
-            );
+            arrData.push({
+                fio: countValues % 2 == 0 ? " Иван Иванович И." : 'Денис Денисович Д.',
+                educationalInstitution: "СОШ №"+countValues,
+                class: "7а",
+                id: countValues
+            })
             countValues = countValues - 1;
         }
+        return arrData;
     }
-    initTest();
+    let view = [
+        {name:'fio',text:"ФИО", type:"text", func: null},
+        {name:'educationalInstitution',text:"Образовательное учреждение", type:"text", func: null},
+        {name:'class',text:"Класс", type:"text", func: null},
+    ],
+    table1 = new TableForm('#table-student', view, false);
+    table1.buildAdnRenderData(initTestData(15).reverse());
 </script>
 </html>
