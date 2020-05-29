@@ -41,7 +41,13 @@ class BasicSearch {
         this.values = [];
         jqueryFields.each(function(index){
             if ($(this).val() != null && $(this).val() != ''){
-                self.values.push({val: $(this).val(), name: $(this).data('columnname')});
+                let arrayOfVal = $(this).val().split(' '),
+                columnname = $(this).data('columnname');
+                arrayOfVal.forEach(function(value){
+                    if (value != '' && value != ' ' && value != undefined && value != null) {
+                        self.values.push({val: value, name: columnname});
+                    }
+                })
             }
         });
         self.tableForm.isChecked = false;
@@ -237,6 +243,7 @@ class TableForm {
         else {
             data = self.data.filter(function(value){
                 let checker = false;
+                let counter = 0;
                 filter.forEach(function(filt){
                     if (self.isChecked) {
                         if (value[filt.name] == filt.val){
@@ -245,14 +252,13 @@ class TableForm {
                         }
                     }
                     else {
-                        if (value[filt.name].indexOf(filt.val) != -1){
-                            checker = true;
-                            return false;
+                        if (value[filt.name].toUpperCase().indexOf(filt.val.toUpperCase()) != -1){
+                            counter++;
                         }
                     }
                     
                 })
-                return checker;
+                return filter.length == counter;
             });
             self.filterData = data;
             data = data.slice((self.searchpage-1) * self.countValuesOnPage, ((self.searchpage - 1) * self.countValuesOnPage) + self.countValuesOnPage);
