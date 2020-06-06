@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<script src="js/loading.js"></script>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -29,7 +30,7 @@
                 <li><a href=""><i class="material-icons left">account_box</i>Личный кабинет родителя учащегося с ОВЗ</a></li>
             </ul>
             <ul class="right hide-on-med-and-down">
-                <li><a href=""><i class="material-icons right">view_module</i>ФИО родителя</a></li>
+                <li><a href=""><i class="material-icons right">view_module</i><span id="fioParent">ФИО родителя</span></a></li>
             </ul>
         </div>
     </nav>
@@ -70,6 +71,39 @@
 <script src="js/materialize.js"></script>
 <script src="js/main.js"></script>
 <script>
+
+    function getListParents(){
+        let parent,
+        sessiontoken = localStorage.getItem('session_token');
+        $.ajax({
+            type: 'POST', 
+            url: 'http://cab.permedu.ru/api/parent', 
+            headers: {
+                "Content-Type":"application/json",
+                "Accept":"*/*"
+            },
+            data: sessiontoken,
+            success: function(object){
+                renderTableForDataParents(object);
+            }
+        });
+    }
+
+    function renderTableForDataParents(parents){
+        let arrData = [];
+        if (parents.children) {
+            parents.children.forEach(function(child, key){
+                arrData.push({
+                    fio: child.fio,
+                    educationalInstitution: child.organization,
+                    class: child.unit,
+                    id: key
+                })
+            });
+            table1.buildAdnRenderData(arrData);
+        }
+    }
+
     function initTestData(countValues){
         let arrData = [];
         while (countValues > 0){
@@ -88,7 +122,9 @@
         {name:'educationalInstitution',text:"Образовательное учреждение", type:"text", func: null},
         {name:'class',text:"Класс", type:"text", func: null},
     ],
-    table1 = new TableForm('#table-student', view, false);
-    table1.buildAdnRenderData(initTestData(15).reverse());
+    table1 = new TableForm('#table-student', view, false, {
+        editform: './editform.html'
+    });
+    getListParents();
 </script>
 </html>

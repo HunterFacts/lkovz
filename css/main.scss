@@ -91,6 +91,26 @@ footer, .page-footer, nav, .btn {
     margin-top: 15px;
     table {
         tr {
+            &.edituser {
+                &:hover {
+                    background-color: #e3f2fd;
+                    cursor: pointer;
+                    td {
+                        background-color: #e3f2fd;
+                    }
+                }
+                td {
+                    a {
+                        &:hover {
+                            color: #0288d1;
+                        }
+                        color:black;
+                        .edit-icon {
+                            color: #0288d1;
+                        }
+                    }
+                }
+            }
             height:50px;
             border: none;
             th {

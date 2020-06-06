@@ -9196,6 +9196,27 @@ footer, .page-footer, nav, .btn {
   border: none;
 }
 
+.table-block table tr.edituser:hover {
+  background-color: #e3f2fd;
+  cursor: pointer;
+}
+
+.table-block table tr.edituser:hover td {
+  background-color: #e3f2fd;
+}
+
+.table-block table tr.edituser td a {
+  color: black;
+}
+
+.table-block table tr.edituser td a:hover {
+  color: #0288d1;
+}
+
+.table-block table tr.edituser td a .edit-icon {
+  color: #0288d1;
+}
+
 .table-block table tr th {
   color: #607d8b;
   font-weight: 500;

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="font/stylesheet.css">
     <link rel="stylesheet" href="css/main.min.css" class="notranslate">
 
-    <title>ЛК ОВЗ</title>
+    <title>Авторизация</title>
 </head>
 <body>
 <main class="auth-main">
@@ -30,6 +30,9 @@
                             <div class="input-field col s12">
                                 <input id="pass" type="text" class="validate">
                                 <label for="pass">Пароль</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <a id="authBtn" class="waves-effect btn">Авторизоваться</a>
                             </div>
                         </div>
                         </form>
@@ -56,4 +59,80 @@
 <script src="js/jquery.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/main.js"></script>
+<script>
+    let accesstoken = '',
+    refreshtoken = '';
+    function authUser(){
+        let pass = $('#pass').val(),
+        login = $('#login').val(),
+        date = new Date();
+        accesstoken = date.getTime() + '' + Math.floor(Math.random() * Math.floor(100));
+        refreshtoken = Math.floor(Math.random() * Math.floor(100))+ '' +date.getTime();
+        $.ajax({
+            type: "POST",
+            url: "http://cab.permedu.ru/api/rsaagsession",
+            headers: {
+                    "Content-Type":"application/json",
+                    "Accept":"*/*"
+            },
+            data: JSON.stringify({
+                "access_token" : accesstoken,
+                "refresh_token" : refreshtoken,
+                "expires_in" : "123123",
+                "rsaag_id" : "1111"
+            })
+        }).done(function( msg ) {
+            if (msg.status == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://cab.permedu.ru/api/attach",
+                    headers: {
+                            "Content-Type":"application/json",
+                            "Accept":"*/*"
+                    },
+                    data: JSON.stringify({
+                        "access_token":accesstoken,
+                        "login":login,
+                        "password":pass
+                    })
+                }).done(function( msg ) {
+                    if (msg.status == true) {
+                        $.ajax({
+                            type: "POST",
+                            url: "http://cab.permedu.ru/api/parent",
+                            headers: {
+                                    "Content-Type":"application/json",
+                                    "Accept":"*/*"
+                            },
+                            data: accesstoken
+                        }).done(function( object ) {
+                            try {
+                                if (object.fio){
+                                    localStorage.setItem('session_token', accesstoken);
+                                    localStorage.setItem('refresh_token', refreshtoken);
+                                    localStorage.setItem('fioParent', object.fio);
+                                    document.location.href = "./listform.html";
+                                }
+                            }
+                            catch(ex){
+                                M.toast({html: "Введены неверные учетные данные"});
+                            }
+                        });
+                        
+                    }
+                    else {
+                        M.toast({html: "Введены неверные учетные данные"});
+                    }
+                });
+            }
+            else {
+                M.toast({html: "Сессия не авторизована"});
+            }
+        });
+    }
+
+    $('#authBtn').click(function(){
+        authUser();
+    });
+</script>
 </html>

@@ -63,7 +63,7 @@ class BasicSearch {
 }
 
 class TableForm {
-    constructor(container, view, isCheckers = false) {
+    constructor(container, view, isCheckers = false, editform = null) {
         this.container = container;
         let defaultView = {name:'main',text:"", type:"main", func: null}
         this.view = view;
@@ -77,6 +77,11 @@ class TableForm {
         this.isSearch = false;
         this.isChecked = false;
         this.filter = null;
+        this.IsEdit = false;
+        if (editform != null) {
+            this.editform = editform.editform
+            this.IsEdit = true;
+        }
         this.init();
     }
 
@@ -144,6 +149,7 @@ class TableForm {
             }
             
         });
+        self.renderLineThead('');
     }
 
     buildAdnRenderData(data){
@@ -269,7 +275,7 @@ class TableForm {
             textPages.all = self.filterData.length;
         }
         data.forEach(function(obj, key){
-            $(self.container + ' table tbody').append("<tr data-key-id="+obj.id+"></tr>");
+            $(self.container + ' table tbody').append("<tr class='"+ (self.IsEdit ? "edituser" : "") + "' data-key-id="+obj.id+"></tr>");
             if (self.isCheckers){
                 let checked = false;
                 var objId = obj.id;
@@ -286,8 +292,12 @@ class TableForm {
                 $('input[data-trigger="'+obj.id+'"]').change(function() {self.changeCheckBox(obj.id, obj)})
             }
             for (var keyObj in obj) {
-                keyObj !== 'id' ? $(self.container + ' table tbody [data-key-id="'+obj.id+'"]').append("<td>"+obj[keyObj]+"</td>") : undefined;
+                keyObj !== 'id' ? $(self.container + ' table tbody [data-key-id="'+obj.id+'"]').append(
+                    self.IsEdit ? "<td><a href='"+self.editform+"#"+obj.id+"'>"+obj[keyObj]+"</td>":"<td>"+obj[keyObj]+"</td>"
+                    ) : undefined;
             }
+            self.IsEdit ? ($(self.container + ' table tbody [data-key-id="'+obj.id+'"]').append("<td><a class='tooltipped' data-position='right' data-tooltip='Просмотр' href='"+self.editform+"#"+obj.id+"'><i class='small edit-icon material-icons'>open_in_new</i></td>")) : undefined;
+            self.IsEdit ? $('.tooltipped').tooltip() : undefined;
         });
         self.renderPageInformation(textPages)
     }
@@ -363,13 +373,28 @@ class TableForm {
     }
 }
 
+function ping(ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(function(){
+            $.ajax({
+                type: 'GET', 
+                url: 'http://cab.permedu.ru/api/ping?text=1', 
+                headers: {
+                    "Content-Type":"application/json",
+                    "Accept":"*/*"
+                },
+            });
+            ping(15000)}, ms);
+    });
+}
+ping(0);
 $(document).ready(function(){
     function initApp(){
         $('.dynamic-dropdown-content').html('<li><a href="listform.html">Списковая форма</a></li>'
         +'<li><a href="editform.html">Форма редактирования</a></li>'
         +'<li><a href="login.html">Логин</a></li>'
         +'<li class="divider"></li>');
-
+        $('#fioParent').html(localStorage.getItem('fioParent'))
 
         // ИНИЦИАЛИЗАЦИЯ ЭЛЕМЕНТОВ MATERIALIZE
         $("#dropdown-trigger").dropdown({
