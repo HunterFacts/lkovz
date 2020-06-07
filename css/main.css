@@ -9355,6 +9355,34 @@ footer, .page-footer, nav, .btn {
   max-height: calc(15vh);
 }
 
+.preloader-container {
+  background-color: white;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2001;
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  align-items: center;
+}
+
+.preloader-container > div {
+  width: 150px;
+  text-align: center;
+}
+
+.preloader-container > div h5 {
+  font-size: 36px;
+  color: black;
+}
+
+.spinner-custom {
+  border-color: black;
+}
+
 .two-nav {
   height: 40px;
   line-height: 40px;

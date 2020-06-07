@@ -18,6 +18,9 @@
         <li><a href="login.html">Логин</a></li>
         <li class="divider"></li>
     </ul>
+    <ul id='dropdown2' class='dropdown-content'>
+        <li><a id="exitUser" href="#!">Выйти</a></li>
+    </ul>
     <nav class="main-nav">
         <div class="nav-wrapper">
             <a href="index.html" class="brand-logo left">Единый портал <br>пермского образования</a>
@@ -30,7 +33,7 @@
                 <li><a href=""><i class="material-icons left">account_box</i>Личный кабинет родителя учащегося с ОВЗ</a></li>
             </ul>
             <ul class="right hide-on-med-and-down">
-                <li><a href=""><i class="material-icons right">view_module</i><span id="fioParent">ФИО родителя</span></a></li>
+                <li><a id ="exitdropdown" href='#' data-target='dropdown2'><i class="material-icons right">view_module</i><span id="fioParent">ФИО родителя</span></a></li>
             </ul>
         </div>
     </nav>
@@ -131,6 +134,7 @@
 <script src="js/materialize.js"></script>
 <script src="js/main.js"></script>
 <script>
+    let table1;
     function initTestData(countValues){
         let arrData = [];
         while (countValues > 0){
@@ -148,87 +152,139 @@
         }
         return arrData;
     }
-    let view = [
-        {name:'login',text:"Логин", type:"text", func: null},
-        {name:'isPasswordbool',text:"Пароль сформирован", type:"text", func: null},
-        {name:'date',text:"Дата загрузки в ЛК", type:"text", func: null},
-        {name:'fio',text:"ФИО Родителя", type:"text", func: null},
-        {name:'fioChild',text:"ФИО ребенка", type:"minitable", func: null},
-        {name:'educationalInstitution',text:"Образовательная организация", type:"text", func: null},
-        {name:'class',text:"Класс", type:"text", func: null},
-    ],
-    table1 = new TableForm('#table-admin', view, true);
-    table1.buildAdnRenderData(initTestData(211).reverse());
+    function adminformInit(){
+        let sessiontoken = localStorage.getItem('session_token');
+        $.ajax({
+            type: 'POST', 
+            url: 'http://cab.permedu.ru/api/parents', 
+            headers: {
+                "Content-Type":"application/json",
+                "Accept":"*/*"
+            },
+            data: sessiontoken,
+            success: function(object){
+                if (object) {
+                    let arrData = [];
+                    object.forEach((parent) => {
+                        parent.children.forEach((child) => {
+                            arrData.push({
+                                login: parent.login,
+                                isPasswordbool: parent.password_exists ? 'Да': 'Нет',
+                                date: parent.create_date,
+                                fio: parent.fio,
+                                fioChild: child.fio,
+                                educationalInstitution: child.organization,
+                                class: child.unit,
+                                id: parent.Id + "" + child.id
+                            })
+                        })
+                    });
+                    let view = [
+                        {name:'login',text:"Логин", type:"text", func: null},
+                        {name:'isPasswordbool',text:"Пароль сформирован", type:"text", func: null},
+                        {name:'date',text:"Дата загрузки в ЛК", type:"text", func: null},
+                        {name:'fio',text:"ФИО Родителя", type:"text", func: null},
+                        {name:'fioChild',text:"ФИО ребенка", type:"minitable", func: null},
+                        {name:'educationalInstitution',text:"Образовательная организация", type:"text", func: null},
+                        {name:'class',text:"Класс", type:"text", func: null},
+                    ],
+                    table1 = new TableForm('#table-admin', view, true);
+                    table1.buildAdnRenderData(arrData);
 
-    let basicSearch = new BasicSearch('.search-table',table1);
-    $('#createPasswordModal').modal();
-    $('.btn-create-password').click(function() {
-        if (table1.selectedItems.size != 0){
-            if (table1.selectedItems.size == 1) {
-                $('#createPasswordModal').html(
-                '<div class="modal-content">'
-                    +'<p>Для выбранного пользователя был сформирован новый пароль <br> Скопируйте и передайте учетные данные (логин и пароль родителя) пользователю</p>'
-                    +'<div id="table-admin-lookup" class="table-admin">'
-                        +'<div class="table-block table-block-admin">'
-                            +'<table></table>'
-                        +'</div>'
-                        +'<div class="pagination-main-container">'
-                            +'<div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>'
-                            +'<div class="input-field pagination-select-container">'
-                                +'<select class="pagination-select">'
-                                    +'<option value="5">5</option>'
-                                    +'<option value="10">10</option>'
-                                    +'<option value="15">15</option>'
-                                    +'<option value="50">50</option>'
-                                +'</select>'
-                                +'<label></label>'
-                            +'</div>'
-                        +'</div>'
-                    +'</div>'
-                +'</div>'
-                +'<div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-blue btn-flat">Закрыть</a></div>');
-                let view = [
-                    {name:'login',text:"Логин родителя", type:"text", func: null},
-                    {name:'newPassword',text:"Пароль родителя", type:"text", func: null},
-                    {name:'date',text:"Дата загрузки в ЛК", type:"text", func: null},
-                    {name:'fio',text:"ФИО Родителя", type:"text", func: null},
-                    {name:'fioChild',text:"ФИО ребенка", type:"minitable", func: null},
-                    {name:'educationalInstitution',text:"Образовательная организация", type:"text", func: null},
-                    {name:'class',text:"Класс", type:"text", func: null},
-                ],
-                table2 = new TableForm('#table-admin-lookup', view, false);
-                let arrData = [];
-                let onevalue = table1.selectedItems.entries().next().value[1];
-                arrData.push({
-                    login: onevalue.login,
-                    newPassword: '123555324',
-                    date: onevalue.date,
-                    fio: onevalue.fio,
-                    fioChild: onevalue.fioChild,
-                    educationalInstitution: onevalue.educationalInstitution,
-                    class: onevalue.class,
-                    id: onevalue.id
-                });
-                table2.buildAdnRenderData(arrData);
+                    let basicSearch = new BasicSearch('.search-table',table1);
+                    $('#createPasswordModal').modal();
+                        $('.btn-create-password').click(function() {
+                            if (table1.selectedItems.size != 0){
+                                if (table1.selectedItems.size == 1) {
+                                    $('#createPasswordModal').html(
+                                    '<div class="modal-content">'
+                                        +'<p>Для выбранного пользователя был сформирован новый пароль <br> Скопируйте и передайте учетные данные (логин и пароль родителя) пользователю</p>'
+                                        +'<div id="table-admin-lookup" class="table-admin">'
+                                            +'<div class="table-block table-block-admin">'
+                                                +'<table></table>'
+                                            +'</div>'
+                                            +'<div class="pagination-main-container">'
+                                                +'<div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>'
+                                                +'<div class="input-field pagination-select-container">'
+                                                    +'<select class="pagination-select">'
+                                                        +'<option value="5">5</option>'
+                                                        +'<option value="10">10</option>'
+                                                        +'<option value="15">15</option>'
+                                                        +'<option value="50">50</option>'
+                                                    +'</select>'
+                                                    +'<label></label>'
+                                                +'</div>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                    +'<div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-blue btn-flat">Закрыть</a></div>');
+                                    let view = [
+                                        {name:'login',text:"Логин родителя", type:"text", func: null},
+                                        {name:'newPassword',text:"Пароль родителя", type:"text", func: null},
+                                        {name:'date',text:"Дата загрузки в ЛК", type:"text", func: null},
+                                        {name:'fio',text:"ФИО Родителя", type:"text", func: null},
+                                        {name:'fioChild',text:"ФИО ребенка", type:"minitable", func: null},
+                                        {name:'educationalInstitution',text:"Образовательная организация", type:"text", func: null},
+                                        {name:'class',text:"Класс", type:"text", func: null},
+                                    ],
+                                    table2 = new TableForm('#table-admin-lookup', view, false);
+                                    let arrData = [],
+                                    date = new Date(),
+                                    onevalue = table1.selectedItems.entries().next().value[1],
+                                    newPassword = sessiontoken + date.getTime() + '' + Math.floor(Math.random() * Math.floor(100));
+                                    newPassword = newPassword.substr(newPassword.length - 8);
+                                    $.ajax({
+                                        type: 'POST', 
+                                        url: 'http://cab.permedu.ru/api/reset', 
+                                        headers: {
+                                            "Content-Type":"application/json",
+                                            "Accept":"*/*"
+                                        },
+                                        data: JSON.stringify({
+                                            "access_token": sessiontoken,
+                                            "parent_login":onevalue.login,
+                                            "parent_password": newPassword
+                                        }),
+                                        success: function(object){
+                                            arrData.push({
+                                                login: onevalue.login,
+                                                newPassword: newPassword,
+                                                date: onevalue.date,
+                                                fio: onevalue.fio,
+                                                fioChild: onevalue.fioChild,
+                                                educationalInstitution: onevalue.educationalInstitution,
+                                                class: onevalue.class,
+                                                id: onevalue.id
+                                            });
+                                            table2.buildAdnRenderData(arrData);
+                                        }
+                                    });                        
+                                }
+                                else {
+                                    $('#createPasswordModal').html('<div class="modal-content"><div class="modal-flex"><h5>Вы действительно хотите сформировать новые пароли для всех выбранных пользователей</h5></div>'
+                                    +'<div class="modal-flex"><button class="btn btn-access">Да</button><button class="btn btn-no-access">Нет</button></div>'
+                                    +'</div>');
+                                    $('#createPasswordModal .btn-access').click(function(){
+                                        M.toast({html: "Данные выгружены в xml"});
+                                        $('#createPasswordModal').modal('close');
+                                    });
+                                    $('#createPasswordModal .btn-no-access').click(function(){
+                                        M.toast({html: "Отмена операции"});
+                                        $('#createPasswordModal').modal('close');
+                                    });
+                                }
+                            }
+                            else {
+                                $('#createPasswordModal').html('<div class="modal-content"><h3>Ошибка! Не выбран не один пользователь</h3></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-blue btn-flat">Закрыть</a></div>')
+                            }
+                            $('#createPasswordModal').modal('open');
+                        });
+                }
             }
-            else {
-                $('#createPasswordModal').html('<div class="modal-content"><div class="modal-flex"><h5>Вы действительно хотите сформировать новые пароли для всех выбранных пользователей</h5></div>'
-                +'<div class="modal-flex"><button class="btn btn-access">Да</button><button class="btn btn-no-access">Нет</button></div>'
-                +'</div>');
-                $('#createPasswordModal .btn-access').click(function(){
-                    M.toast({html: "Данные выгружены в xml"});
-                    $('#createPasswordModal').modal('close');
-                });
-                $('#createPasswordModal .btn-no-access').click(function(){
-                    M.toast({html: "Отмена операции"});
-                    $('#createPasswordModal').modal('close');
-                });
-            }
-        }
-        else {
-            $('#createPasswordModal').html('<div class="modal-content"><h3>Ошибка! Не выбран не один пользователь</h3></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-blue btn-flat">Закрыть</a></div>')
-        }
-        $('#createPasswordModal').modal('open');
-    });
+        });
+    }
+    adminformInit();
+    
+    
 </script>
 </html>

@@ -264,7 +264,7 @@ class TableForm {
                     }
                     
                 })
-                return filter.length == counter;
+                return filter.length == counter || checker;
             });
             self.filterData = data;
             data = data.slice((self.searchpage-1) * self.countValuesOnPage, ((self.searchpage - 1) * self.countValuesOnPage) + self.countValuesOnPage);
@@ -293,10 +293,10 @@ class TableForm {
             }
             for (var keyObj in obj) {
                 keyObj !== 'id' ? $(self.container + ' table tbody [data-key-id="'+obj.id+'"]').append(
-                    self.IsEdit ? "<td><a href='"+self.editform+"#"+obj.id+"'>"+obj[keyObj]+"</td>":"<td>"+obj[keyObj]+"</td>"
+                    self.IsEdit ? "<td><a href='"+self.editform+"?id="+obj.id+"'>"+obj[keyObj]+"</td>":"<td>"+obj[keyObj]+"</td>"
                     ) : undefined;
             }
-            self.IsEdit ? ($(self.container + ' table tbody [data-key-id="'+obj.id+'"]').append("<td><a class='tooltipped' data-position='right' data-tooltip='Просмотр' href='"+self.editform+"#"+obj.id+"'><i class='small edit-icon material-icons'>open_in_new</i></td>")) : undefined;
+            self.IsEdit ? ($(self.container + ' table tbody [data-key-id="'+obj.id+'"]').append("<td><a class='tooltipped' data-position='right' data-tooltip='Просмотр' href='"+self.editform+"?id="+obj.id+"'><i class='small edit-icon material-icons'>open_in_new</i></td>")) : undefined;
             self.IsEdit ? $('.tooltipped').tooltip() : undefined;
         });
         self.renderPageInformation(textPages)
@@ -388,13 +388,25 @@ function ping(ms) {
     });
 }
 ping(0);
+function preloaderClose(){
+    $( ".preloader-container" ).animate({
+        opacity: 0.1
+    }, 500, function() {
+        $('.preloader-container').hide();
+    });
+}
 $(document).ready(function(){
     function initApp(){
-        $('.dynamic-dropdown-content').html('<li><a href="listform.html">Списковая форма</a></li>'
-        +'<li><a href="editform.html">Форма редактирования</a></li>'
-        +'<li><a href="login.html">Логин</a></li>'
+        $('.dynamic-dropdown-content').html('<li><a href="listform.html">Учащиеся с ОВЗ</a></li>'
         +'<li class="divider"></li>');
-        $('#fioParent').html(localStorage.getItem('fioParent'))
+        $('#fioParent').html(localStorage.getItem('fioParent'));
+        $('#exitdropdown').dropdown();
+        $('#exitUser').click(function(){
+            localStorage.removeItem('session_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('fioParent');
+            document.location.href = "./login.html";
+        });
 
         // ИНИЦИАЛИЗАЦИЯ ЭЛЕМЕНТОВ MATERIALIZE
         $("#dropdown-trigger").dropdown({

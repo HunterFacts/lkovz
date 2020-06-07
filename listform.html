@@ -12,11 +12,30 @@
     <title>ЛК ОВЗ</title>
 </head>
 <body>
+    <div class="preloader-container">
+        <div>
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-custom">
+                    <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                <div class="circle"></div>
+                </div>
+            </div>
+            </div>
+            <h5>Загрузка</h5>
+        </div>
+    </div>
     <ul id="dropdown1" class="dropdown-content dynamic-dropdown-content">
         <li><a href="listform.html">Списковая форма</a></li>
         <li><a href="editform.html">Форма редактирования</a></li>
         <li><a href="login.html">Логин</a></li>
         <li class="divider"></li>
+    </ul>
+    <ul id='dropdown2' class='dropdown-content'>
+        <li><a id="exitUser" href="#!">Выйти</a></li>
     </ul>
     <nav class="main-nav">
         <div class="nav-wrapper">
@@ -30,7 +49,7 @@
                 <li><a href=""><i class="material-icons left">account_box</i>Личный кабинет родителя учащегося с ОВЗ</a></li>
             </ul>
             <ul class="right hide-on-med-and-down">
-                <li><a href=""><i class="material-icons right">view_module</i><span id="fioParent">ФИО родителя</span></a></li>
+                <li><a id ="exitdropdown" href='#' data-target='dropdown2'><i class="material-icons right">view_module</i><span id="fioParent">ФИО родителя</span></a></li>
             </ul>
         </div>
     </nav>
@@ -97,10 +116,11 @@
                     fio: child.fio,
                     educationalInstitution: child.organization,
                     class: child.unit,
-                    id: key
+                    id: child.id
                 })
             });
             table1.buildAdnRenderData(arrData);
+            preloaderClose();
         }
     }
 

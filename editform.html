@@ -12,11 +12,30 @@
     <title>ЛК ОВЗ</title>
 </head>
 <body>
+    <div class="preloader-container">
+        <div>
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-custom">
+                    <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                <div class="circle"></div>
+                </div>
+            </div>
+            </div>
+            <h5>Загрузка</h5>
+        </div>
+    </div>
     <ul id="dropdown1" class="dropdown-content dynamic-dropdown-content">
         <li><a href="listform.html">Списковая форма</a></li>
         <li><a href="editform.html">Форма редактирования</a></li>
         <li><a href="login.html">Логин</a></li>
         <li class="divider"></li>
+    </ul>
+    <ul id='dropdown2' class='dropdown-content'>
+        <li><a id="exitUser" href="#!">Выйти</a></li>
     </ul>
     <nav class="main-nav">
         <div class="nav-wrapper">
@@ -30,7 +49,7 @@
                 <li><a href=""><i class="material-icons left">account_box</i>Личный кабинет родителя учащегося с ОВЗ</a></li>
             </ul>
             <ul class="right hide-on-med-and-down">
-                <li><a href=""><i class="material-icons right">view_module</i><span id="fioParent">ФИО родителя</span></a></li>
+                <li><a id ="exitdropdown" href='#' data-target='dropdown2'><i class="material-icons right">view_module</i><span id="fioParent">ФИО родителя</span></a></li>
             </ul>
         </div>
     </nav>
@@ -38,11 +57,11 @@
     <div class="row">
         <div class="col s12 l8 offset-l2">
             <h4>Информация об учащемся с ОВЗ</h4>
-            <span class="field-name">ФИО: </span><span class="field-data">Иван Иванов И.</span><br>
-            <span class="field-name">Текущая образовательная организация: </span><span class="field-data">СОШ №1</span><button class="btn btn-field-data">Написать обращение</button><br>
-            <span class="field-name">Текущие подразделение: </span><span class="field-data">7а</span><br>
+            <span class="field-name">ФИО: </span><span id="fioChild" class="field-data"></span><br>
+            <span class="field-name">Текущая образовательная организация: </span><span id="schoolChild" class="field-data"></span><button class="btn btn-field-data">Написать обращение</button><br>
+            <span class="field-name">Текущие подразделение: </span><span id="classChild" class="field-data"></span><br>
             <br>
-            <span class="field-name">Наименование адаптированной общеобразовательной программы: </span><span class="field-data">АООП для глухих обущающихся</span><br>
+            <span class="field-name">Наименование адаптированной общеобразовательной программы: </span><span id="aoopChild" class="field-data"></span><br>
             <br>
             <span class="field-name">Информация о психолого-педагогическом сопровождении ребенка: </span><br><br>
             <div class="row">
@@ -158,24 +177,114 @@
         }
         return arrData;
     }
-    let view = [
-        {name:'status',text:"Должность специалиста", type:"text", func: null},
-        {name:'countHour',text:"Часов в неделю", type:"text", func: null},
-    ],
-    table1 = new TableForm('#table-info', view, false);
-    table1.buildAdnRenderData(initTestData(45, 1).reverse());
-    view = [
-        {name:'results',text:"Результаты освоения", type:"text", func: null},
-        {name:'year',text:"Учебный год", type:"text", func: null},
-        {name:'educationalInstitution',text:"Образовательное учреждение", type:"text", func: null},
-    ];
-    let table2 = new TableForm('#table-results', view, false);
-    table2.buildAdnRenderData(initTestData(80, 2).reverse());
-    view = [
-        {name:'file',text:"Файл", type:"text", func: null},
-        {name:'link',text:"Ссылка", type:"button", func: null},
-    ];
-    let table3 = new TableForm('#table-files', view, false);
-    table3.buildAdnRenderData(initTestData(150, 3).reverse());
+
+    function getParamsUrl() {
+        var getParams;
+        // Если get-параметров много
+        if(window.location.search.indexOf('&') != -1){
+        getParams = window.location.search.split('&').map(function(item){
+            var currentValue = item.split('=');
+            return {[currentValue[0]]: currentValue[1]}
+        });
+        // если один
+        } else {
+        var currentValue = window.location.search.replace(/\?/, '').split('=');
+        getParams = {[currentValue[0]]: currentValue[1]};
+        }
+        return getParams;
+    }
+
+    let child = '';
+
+    function editformInit(){
+        let sessiontoken = localStorage.getItem('session_token');
+        $.ajax({
+            type: 'POST', 
+            url: 'http://cab.permedu.ru/api/parent', 
+            headers: {
+                "Content-Type":"application/json",
+                "Accept":"*/*"
+            },
+            data: sessiontoken,
+            success: function(object){
+                if (object) {
+                    if (object.children.length != 0) {
+                        let params = getParamsUrl(),
+                        id = params.id;
+                        let child = object.children.find(function(element){
+                            return element.id ==  params.id;
+                        });
+                        $('#fioChild').text(child.fio);
+                        $('#schoolChild').text(child.organization);
+                        $('#classChild').text(child.unit);
+                        $('#aoopChild').text(child.aoop);
+                        if (child.escorts.length != 0) {
+                            let view = [
+                                {name:'status',text:"Должность специалиста", type:"text", func: null},
+                                {name:'countHour',text:"Часов в неделю", type:"text", func: null},
+                            ];
+                            let arrData = [];
+                            child.escorts.forEach((element, index) => {
+                                arrData.push({
+                                    'status': element.specialist,
+                                    'countHour': element.hours,
+                                    'id': index
+                                })
+                            });
+                            table1 = new TableForm('#table-info', view, false);
+                            table1.buildAdnRenderData(arrData);
+                        }
+                        else {
+                            $('#table-info').html('');
+                        }
+                        if (child.results.length != 0) {
+                            let view = [
+                                {name:'results',text:"Результаты освоения", type:"text", func: null},
+                                {name:'year',text:"Учебный год", type:"text", func: null},
+                                {name:'educationalInstitution',text:"Образовательное учреждение", type:"text", func: null},
+                            ];
+                            let arrData = [];
+                            child.results.forEach((element, index) => {
+                                arrData.push({
+                                    'results': element.year_result,
+                                    'year': element.year,
+                                    'educationalInstitution': element.organization,
+                                    'id': index
+                                })
+                            });
+                            let table2 = new TableForm('#table-results', view, false);
+                            table2.buildAdnRenderData(arrData);
+                        }
+                        else {
+                            $('#table-results').html('');
+                        }
+                        if (child.files.length != 0) {
+                            let view = [
+                                {name:'file',text:"Файл", type:"text", func: null},
+                                {name:'link',text:"Ссылка", type:"button", func: null},
+                            ];
+                            let arrData = [];
+                            child.files.forEach((element, index) => {
+                                arrData.push({
+                                    'file': 'Файл '+ (index+1),
+                                    'link': '<a href="'+element+'">'+element+'</a>',
+                                    'id': index
+                                })
+                            });
+                            let table3 = new TableForm('#table-files', view, false);
+                            table3.buildAdnRenderData(arrData);
+                        }
+                        else {
+                            $('#table-files').html('');
+                        }
+                        preloaderClose();
+                        
+                    }
+                }
+            }
+        });
+    }
+    editformInit();
+    
 </script>
 </html>
