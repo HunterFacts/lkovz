@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<script src="js/loading.js"></script>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -8,42 +7,45 @@
 
     <link rel="stylesheet" href="font/stylesheet.css">
     <link rel="stylesheet" href="css/main.min.css" class="notranslate">
-    
-    <title>ЛК ОВЗ</title>
+
+    <title>Авторизация</title>
 </head>
 <body>
-<ul id="dropdown1" class="dropdown-content dynamic-dropdown-content">
-    <li><a href="listform.html">Списковая форма</a></li>
-    <li><a href="editform.html">Форма редактирования</a></li>
-    <li><a href="login.html">Логин</a></li>
-    <li class="divider"></li>
-</ul>
-<ul id='dropdown2' class='dropdown-content'>
-    <li><a id="exitUser" href="#!">Выйти</a></li>
-</ul>
-<nav class="main-nav">
-    <div class="nav-wrapper">
-        <a href="index.html" class="brand-logo left">Единый портал <br>пермского образования</a>
+<main class="auth-main">
+    <div class="row">
+        <div class="col s6 offset-s3">
+            <div class="card">
+                <div class="card-image waves-effect waves-block waves-light">
+                    <img class="activator" src="img/Group 86.jpg">
+                </div>
+                <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Авторизация<i class="material-icons right">more_vert</i></span>
+                    <div class="row">
+                        <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="login" type="text" class="validate">
+                                <label for="login">Логин</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <input id="pass" type="text" class="validate">
+                                <label for="pass">Пароль</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <a id="authBtn" class="waves-effect btn">Авторизоваться</a>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                    <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                </div>
+            </div>
+        </div>
     </div>
-</nav>
-<nav class="two-nav">
-    <div class="nav-wrapper">
-        <ul class="left hide-on-med-and-down">
-            <li><a class="dropdown-trigger" id="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons">menu</i></a></li>
-            <li><a href=""><i class="material-icons left">account_box</i>Личный кабинет родителя учащегося с ОВЗ</a></li>
-        </ul>
-        <ul class="right hide-on-med-and-down">
-            <li><a id ="exitdropdown" href='#' data-target='dropdown2'><i class="material-icons right">view_module</i><span id="fioParent">ФИО родителя</span></a></li>
-        </ul>
-    </div>
-</nav>
-<main class="rssa-main">
-    <div class="card card-authrss">
-        <center><h6>Личный кабинет для учащихся с ОВЗ</h6></center><br>
-        <span>Вход в личный кабинет осуществляется через учетные записи рсааг</span><br>
-        <br><br>
-        <center><button class="btn">Войти через РСААГ</button></center>
-    </div>
+    
 </main>
 
 <footer class="page-footer">
@@ -52,9 +54,85 @@
         © 2020 Copyright Text
         </div>
     </div>
-    </footer>
+</footer>
 </body>
 <script src="js/jquery.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/main.js"></script>
+<script>
+    let accesstoken = '',
+    refreshtoken = '';
+    function authUser(){
+        let pass = $('#pass').val(),
+        login = $('#login').val(),
+        date = new Date();
+        accesstoken = date.getTime() + '' + Math.floor(Math.random() * Math.floor(100));
+        refreshtoken = Math.floor(Math.random() * Math.floor(100))+ '' +date.getTime();
+        $.ajax({
+            type: "POST",
+            url: "http://cab.permedu.ru/api/rsaagsession",
+            headers: {
+                    "Content-Type":"application/json",
+                    "Accept":"*/*"
+            },
+            data: JSON.stringify({
+                "access_token" : accesstoken,
+                "refresh_token" : refreshtoken,
+                "expires_in" : "123123",
+                "rsaag_id" : "1111"
+            })
+        }).done(function( msg ) {
+            if (msg.status == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://cab.permedu.ru/api/attach",
+                    headers: {
+                            "Content-Type":"application/json",
+                            "Accept":"*/*"
+                    },
+                    data: JSON.stringify({
+                        "access_token":accesstoken,
+                        "login":login,
+                        "password":pass
+                    })
+                }).done(function( msg ) {
+                    if (msg.status == true) {
+                        $.ajax({
+                            type: "POST",
+                            url: "http://cab.permedu.ru/api/parent",
+                            headers: {
+                                    "Content-Type":"application/json",
+                                    "Accept":"*/*"
+                            },
+                            data: accesstoken
+                        }).done(function( object ) {
+                            try {
+                                if (object.fio){
+                                    localStorage.setItem('session_token', accesstoken);
+                                    localStorage.setItem('refresh_token', refreshtoken);
+                                    localStorage.setItem('fioParent', object.fio);
+                                    document.location.href = "./listform.html";
+                                }
+                            }
+                            catch(ex){
+                                M.toast({html: "Введены неверные учетные данные"});
+                            }
+                        });
+                        
+                    }
+                    else {
+                        M.toast({html: "Введены неверные учетные данные"});
+                    }
+                });
+            }
+            else {
+                M.toast({html: "Сессия не авторизована"});
+            }
+        });
+    }
+
+    $('#authBtn').click(function(){
+        authUser();
+    });
+</script>
 </html>
