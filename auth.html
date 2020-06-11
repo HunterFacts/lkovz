@@ -1,0 +1,46 @@
+<script src="js/jquery.js"></script>
+<script src="js/materialize.js"></script>
+<script>
+    function getParamsUrl() {
+        var getParams;
+        // Если get-параметров много
+        if(window.location.search.indexOf('&') != -1){
+        getParams = window.location.search.split('&').map(function(item){
+            var currentValue = item.split('=');
+            return {[currentValue[0]]: currentValue[1]}
+        });
+        // если один
+        } else {
+        var currentValue = window.location.search.replace(/\?/, '').split('=');
+        getParams = {[currentValue[0]]: currentValue[1]};
+        }
+        return getParams;
+    }
+
+    function init (){
+        let params = getParamsUrl();
+        if (params.code != undefined && params.code != null && params.code != "") {
+            $.ajax({
+                type: 'POST', 
+                url: 'https://cabinet-test.permkrai.ru/oauth/token', 
+                data: {
+                    "code": params.code,
+                    "redirect_uri": 'https://hunterfacts.github.io/lkovz/auth.html',
+                    "grand_type": 'authorization_code',
+                    "client_id": 36,
+                    "client_secret": "a8VOVnbyKNJIN21ssnE2GU9q2vk5AD9UXsjUpuwl"
+                },
+                success: function(object){
+                    if (object.access_token != undefined && object.access_token != null && object.access_token != "") {
+                        alert("Успешно!");
+                    }
+                    else {
+                        alert("Не успешно!");
+                    }
+                }
+            }); 
+        }
+    }
+    init();
+
+</script>
