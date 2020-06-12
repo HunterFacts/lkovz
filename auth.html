@@ -20,15 +20,15 @@
     function init (){
         let params = getParamsUrl();
         if (params.code != undefined && params.code != null && params.code != "") {
+            let code = params.code;
             $.ajax({
                 type: 'POST', 
                 url: 'http://cab.permedu.ru/api/rsaagsession', 
-                dataType: 'json',
                 headers: {
                     "Accept":"*/*",
                     "Content-Type": "application/json"
                 },
-                data: params.code,
+                data: code,
                 success: function(object){
                     if (object.access_token != undefined && object.access_token != null && object.access_token != "") {
                         let access_token = object.access_token;
