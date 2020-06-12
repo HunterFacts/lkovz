@@ -23,11 +23,12 @@
             let code = params.code;
             $.ajax({
                 type: 'POST', 
-                url: 'http://cab.permedu.ru/api/rsaagsession', 
+                url: 'https://localhost:5001', 
                 headers: {
                     "Accept":"*/*",
                     "Content-Type": "application/json"
                 },
+                async: false,
                 data: code,
                 success: function(object){
                     if (object.access_token != undefined && object.access_token != null && object.access_token != "") {
