@@ -23,6 +23,7 @@
             $.ajax({
                 type: 'POST', 
                 url: 'http://cab.permedu.ru/api/rsaagsession', 
+                dataType: 'json',
                 headers: {
                     "Accept":"*/*",
                     "Content-Type": "application/json"
@@ -35,10 +36,10 @@
                         let date = new Date();
                         date.setDate(d.getMilliseconds() + object.expires_in);
                         localStorage('expires_in', date);
-                        document.location.href = "./listform.html";
+                        //document.location.href = "./listform.html";
                     }
                     else {
-                        document.location.href = "./login.html";
+                        //document.location.href = "./login.html";
                     }
                 },
                 error: function(object){
@@ -48,10 +49,10 @@
                         let date = new Date();
                         date.setDate(d.getMilliseconds() + object.expires_in);
                         localStorage('expires_in', date);
-                        document.location.href = "./index.html";
+                        //document.location.href = "./index.html";
                     }
                     else {
-                        document.location.href = "./login.html";
+                        //document.location.href = "./login.html";
                     }
                 }
             }); 
