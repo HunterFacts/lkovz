@@ -22,20 +22,36 @@
         if (params.code != undefined && params.code != null && params.code != "") {
             $.ajax({
                 type: 'POST', 
-                url: 'https://cabinet-test.permkrai.ru/oauth/token', 
-                data: {
-                    "code": params.code,
-                    "redirect_uri": 'https://hunterfacts.github.io/lkovz/auth.html',
-                    "grand_type": 'authorization_code',
-                    "client_id": 36,
-                    "client_secret": "a8VOVnbyKNJIN21ssnE2GU9q2vk5AD9UXsjUpuwl"
+                url: 'http://cab.permedu.ru/api/rsaagsession', 
+                headers: {
+                    "Accept":"*/*",
+                    "Content-Type": "application/json"
                 },
+                data: params.code,
                 success: function(object){
                     if (object.access_token != undefined && object.access_token != null && object.access_token != "") {
-                        alert("Успешно!");
+                        let access_token = object.access_token;
+                        localStorage.setItem('session_token', access_token);
+                        let date = new Date();
+                        date.setDate(d.getMilliseconds() + object.expires_in);
+                        localStorage('expires_in', date);
+                        document.location.href = "./listform.html";
                     }
                     else {
-                        alert("Не успешно!");
+                        document.location.href = "./login.html";
+                    }
+                },
+                error: function(object){
+                    if (object.access_token != undefined && object.access_token != null && object.access_token != "") {
+                        let access_token = object.access_token;
+                        localStorage.setItem('session_token', access_token);
+                        let date = new Date();
+                        date.setDate(d.getMilliseconds() + object.expires_in);
+                        localStorage('expires_in', date);
+                        document.location.href = "./index.html";
+                    }
+                    else {
+                        document.location.href = "./login.html";
                     }
                 }
             }); 

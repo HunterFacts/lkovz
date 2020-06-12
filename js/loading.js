@@ -3,7 +3,6 @@ function isNull (string){
 }
 function initAuth(){
     if (!isNull(localStorage.getItem('session_token'))){
-        
     }
     else {
         document.location.href = "./login.html";

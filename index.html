@@ -65,69 +65,46 @@
     refreshtoken = '';
     function authUser(){
         let pass = $('#pass').val(),
-        login = $('#login').val(),
-        date = new Date();
-        accesstoken = date.getTime() + '' + Math.floor(Math.random() * Math.floor(100));
-        refreshtoken = Math.floor(Math.random() * Math.floor(100))+ '' +date.getTime();
+        login = $('#login').val();
         $.ajax({
             type: "POST",
-            url: "http://cab.permedu.ru/api/rsaagsession",
+            url: "http://cab.permedu.ru/api/attach",
             headers: {
                     "Content-Type":"application/json",
                     "Accept":"*/*"
             },
             data: JSON.stringify({
-                "access_token" : accesstoken,
-                "refresh_token" : refreshtoken,
-                "expires_in" : "123123",
-                "rsaag_id" : "1111"
+                "access_token": localStorage.getItem("session_token"),
+                "login":login,
+                "password":pass
             })
         }).done(function( msg ) {
             if (msg.status == true) {
                 $.ajax({
                     type: "POST",
-                    url: "http://cab.permedu.ru/api/attach",
+                    url: "http://cab.permedu.ru/api/parent",
                     headers: {
                             "Content-Type":"application/json",
                             "Accept":"*/*"
                     },
-                    data: JSON.stringify({
-                        "access_token":accesstoken,
-                        "login":login,
-                        "password":pass
-                    })
-                }).done(function( msg ) {
-                    if (msg.status == true) {
-                        $.ajax({
-                            type: "POST",
-                            url: "http://cab.permedu.ru/api/parent",
-                            headers: {
-                                    "Content-Type":"application/json",
-                                    "Accept":"*/*"
-                            },
-                            data: accesstoken
-                        }).done(function( object ) {
-                            try {
-                                if (object.fio){
-                                    localStorage.setItem('session_token', accesstoken);
-                                    localStorage.setItem('refresh_token', refreshtoken);
-                                    localStorage.setItem('fioParent', object.fio);
-                                    document.location.href = "./listform.html";
-                                }
-                            }
-                            catch(ex){
-                                M.toast({html: "Введены неверные учетные данные"});
-                            }
-                        });
-                        
+                    data: accesstoken
+                }).done(function( object ) {
+                    try {
+                        if (object.fio){
+                            localStorage.setItem('session_token', accesstoken);
+                            localStorage.setItem('refresh_token', refreshtoken);
+                            localStorage.setItem('fioParent', object.fio);
+                            document.location.href = "./listform.html";
+                        }
                     }
-                    else {
+                    catch(ex){
                         M.toast({html: "Введены неверные учетные данные"});
                     }
                 });
+                
             }
             else {
-                M.toast({html: "Сессия не авторизована"});
+                M.toast({html: "Введены неверные учетные данные"});
             }
         });
     }
