@@ -39,7 +39,7 @@
     </ul>
     <nav class="main-nav">
         <div class="nav-wrapper">
-            <a href="index.html" class="brand-logo left">Единый портал <br>пермского образования</a>
+            <a href="listform.html" class="brand-logo left">Единый портал <br>пермского образования</a>
         </div>
     </nav>
     <nav class="two-nav">
@@ -58,7 +58,7 @@
         <div class="col s12 l8 offset-l2">
             <h4>Информация об учащемся с ОВЗ</h4>
             <span class="field-name">ФИО: </span><span id="fioChild" class="field-data"></span><br>
-            <span class="field-name">Текущая образовательная организация: </span><span id="schoolChild" class="field-data"></span><button class="btn btn-field-data">Написать обращение</button><br>
+            <span class="field-name">Текущая образовательная организация: </span><span id="schoolChild" class="field-data"></span><span class="sendObrashenie"></span><br>
             <span class="field-name">Текущие подразделение: </span><span id="classChild" class="field-data"></span><br>
             <br>
             <span class="field-name">Наименование адаптированной общеобразовательной программы: </span><span id="aoopChild" class="field-data"></span><br>
@@ -205,7 +205,9 @@
                 "Content-Type":"application/json",
                 "Accept":"*/*"
             },
-            data: sessiontoken,
+            data: JSON.stringify({
+                access_token: sessiontoken
+            }),
             success: function(object){
                 if (object) {
                     if (object.children.length != 0) {
@@ -218,6 +220,7 @@
                         $('#schoolChild').text(child.organization);
                         $('#classChild').text(child.unit);
                         $('#aoopChild').text(child.aoop);
+                        $('.sendObrashenie').html("<a class='btn' href='mailto:"+child.email+"?subject=Обращение пользователя "+object.fio+" «ЛК для учащихся с ОВЗ»'>Написать обращение</a>")
                         if (child.escorts.length != 0) {
                             let view = [
                                 {name:'status',text:"Должность специалиста", type:"text", func: null},
@@ -280,6 +283,11 @@
                         preloaderClose();
                         
                     }
+                }
+            },
+            error: function(object){
+                if (object.status == 401) {
+                    clearUserData();
                 }
             }
         });

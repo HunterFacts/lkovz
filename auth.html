@@ -37,25 +37,31 @@
                         let access_token = object.access_token;
                         localStorage.setItem('session_token', access_token);
                         let date = new Date();
-                        date.setDate(d.getMilliseconds() + object.expires_in);
-                        localStorage('expires_in', date);
-                        //document.location.href = "./listform.html";
+                        date.setDate(date.getMilliseconds() + object.expires_in);
+                        localStorage.setItem('expires_in', date);
+                        document.location.href = "./listform.html";
                     }
                     else {
-                        //document.location.href = "./login.html";
+                        document.location.href = "./login.html";
                     }
                 },
                 error: function(object){
-                    if (object.access_token != undefined && object.access_token != null && object.access_token != "") {
-                        let access_token = object.access_token;
-                        localStorage.setItem('session_token', access_token);
-                        let date = new Date();
-                        date.setDate(d.getMilliseconds() + object.expires_in);
-                        localStorage('expires_in', date);
-                        //document.location.href = "./index.html";
+                    if (object.status == 401) {
+                        let json = object.responseJSON;
+                        if (json.access_token != undefined && json.access_token != null && json.access_token != "") {
+                            let access_token = json.access_token;
+                            localStorage.setItem('session_token', access_token);
+                            let date = new Date();
+                            date.setDate(date.getMilliseconds() + json.expires_in);
+                            localStorage.setItem('expires_in', date);
+                            document.location.href = "./index.html";
+                        }
+                        else {
+                            document.location.href = "./login.html";
+                        }
                     }
-                    else {
-                        //document.location.href = "./login.html";
+                    else { 
+                        document.location.href = "./login.html";
                     }
                 }
             }); 

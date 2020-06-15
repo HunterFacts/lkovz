@@ -395,6 +395,14 @@ function preloaderClose(){
         $('.preloader-container').hide();
     });
 }
+
+function clearUserData() {
+    localStorage.removeItem('session_token');
+    localStorage.removeItem('expires_in');
+    localStorage.removeItem('fioParent');
+    document.location.href = "./login.html";
+}
+
 $(document).ready(function(){
     function initApp(){
         $('.dynamic-dropdown-content').html('<li><a href="listform.html">Учащиеся с ОВЗ</a></li>'
@@ -402,10 +410,7 @@ $(document).ready(function(){
         $('#fioParent').html(localStorage.getItem('fioParent'));
         $('#exitdropdown').dropdown();
         $('#exitUser').click(function(){
-            localStorage.removeItem('session_token');
-            localStorage.removeItem('refresh_token');
-            localStorage.removeItem('fioParent');
-            document.location.href = "./login.html";
+            clearUserData();
         });
 
         // ИНИЦИАЛИЗАЦИЯ ЭЛЕМЕНТОВ MATERIALIZE

@@ -87,12 +87,13 @@
                             "Content-Type":"application/json",
                             "Accept":"*/*"
                     },
-                    data: accesstoken
+                    data: JSON.stringify({
+                        access_token: localStorage.getItem("session_token")
+                    })
                 }).done(function( object ) {
                     try {
                         if (object.fio){
-                            localStorage.setItem('session_token', accesstoken);
-                            localStorage.setItem('refresh_token', refreshtoken);
+                            localStorage.setItem('session_token', localStorage.getItem("session_token"));
                             localStorage.setItem('fioParent', object.fio);
                             document.location.href = "./listform.html";
                         }

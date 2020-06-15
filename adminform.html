@@ -23,7 +23,7 @@
     </ul>
     <nav class="main-nav">
         <div class="nav-wrapper">
-            <a href="index.html" class="brand-logo left">Единый портал <br>пермского образования</a>
+            <a href="listform.html" class="brand-logo left">Единый портал <br>пермского образования</a>
         </div>
     </nav>
     <nav class="two-nav">
@@ -161,7 +161,9 @@
                 "Content-Type":"application/json",
                 "Accept":"*/*"
             },
-            data: sessiontoken,
+            data: JSON.stringify({
+                access_token: sessiontoken
+            }),
             success: function(object){
                 if (object) {
                     let arrData = [];
@@ -279,6 +281,11 @@
                             }
                             $('#createPasswordModal').modal('open');
                         });
+                }
+            },
+            error: function(object){
+                if (object.status == 401) {
+                    clearUserData();
                 }
             }
         });
