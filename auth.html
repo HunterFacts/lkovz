@@ -29,9 +29,9 @@
                     "Content-Type": "application/json"
                 },
                 async: false,
-                data: {
+                data: JSON.stringify({
                     code: code
-                },
+                }),
                 success: function(object){
                     if (object.access_token != undefined && object.access_token != null && object.access_token != "") {
                         let access_token = object.access_token;
