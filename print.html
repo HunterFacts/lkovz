@@ -1,0 +1,68 @@
+<style>
+    table tr{
+        border: 1px solid black;
+    }
+    table td{
+        border: 1px solid black;
+    }
+    table th{
+        border: 1px solid black;
+    }
+</style>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Логин родителя</th>
+                <th>Пароль родителя</th>
+                <th>Дата загрузки в ЛК</th>
+                <th>ФИО Родителя</th>
+                <th>ФИО ребенка</th>
+                <th>Образовательная организация</th>
+                <th>Класс</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            
+        </tbody>
+    </table>
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/materialize.js"></script>
+<script>
+    function getParamsUrl() {
+        var getParams;
+        // Если get-параметров много
+        if(window.location.search.indexOf('&') != -1){
+        getParams = window.location.search.split('&').map(function(item){
+            var currentValue = item.split('=');
+            return {[currentValue[0]]: currentValue[1]}
+        });
+        // если один
+        } else {
+        var currentValue = window.location.search.replace(/\?/, '').split('=');
+        getParams = {[currentValue[0]]: currentValue[1]};
+        }
+        return getParams;
+    }
+
+    function init (){
+        let params = getParamsUrl();
+        let json = JSON.parse(decodeURI(params.json));
+        json.forEach(element => {
+            $('tbody').append('<tr>');
+            $('tbody').append('<td>'+element.login+'</td>');
+            $('tbody').append('<td>'+element.newPassword+'</td>');
+            $('tbody').append('<td>'+element.date+'</td>');
+            $('tbody').append('<td>'+element.fio+'</td>');
+            $('tbody').append('<td>'+element.fioChild+'</td>');
+            $('tbody').append('<td>'+element.educationalInstitution+'</td>');
+            $('tbody').append('<td>'+element.class+'</td>');
+            $('tbody').append('</tr>');
+        });
+        window.print();
+    }
+
+    init();
+</script>

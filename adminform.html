@@ -152,6 +152,29 @@
         }
         return arrData;
     }
+
+    function unique(arr) {
+        let result = [];
+        arr.forEach(function(value, key){
+            if (!result.map(function(selectObject){
+                return selectObject.login
+            }).includes(value.login)) {
+                result.push(value);
+            }
+        })
+        return result;
+    }
+
+    function checkPrintBtn(max, iterator, arrData) {
+        if ((max-1) == iterator) {
+            let json = JSON.stringify(arrData);
+            $('.modal-footer-custom').append('<a class="waves-effect waves-blue btn-flat print">Печать</a>');
+            $('.print').click(function(){
+                window.open("./print.html?json="+json);
+            });
+        }
+    }
+
     function adminformInit(){
         let sessiontoken = localStorage.getItem('session_token');
         $.ajax({
@@ -197,39 +220,39 @@
                     $('#createPasswordModal').modal();
                         $('.btn-create-password').click(function() {
                             if (table1.selectedItems.size != 0){
-                                if (table1.selectedItems.size == 1) {
-                                    $('#createPasswordModal').html(
-                                    '<div class="modal-content">'
-                                        +'<p>Для выбранного пользователя был сформирован новый пароль <br> Скопируйте и передайте учетные данные (логин и пароль родителя) пользователю</p>'
-                                        +'<div id="table-admin-lookup" class="table-admin">'
-                                            +'<div class="table-block table-block-admin">'
-                                                +'<table></table>'
-                                            +'</div>'
-                                            +'<div class="pagination-main-container">'
-                                                +'<div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>'
-                                                +'<div class="input-field pagination-select-container">'
-                                                    +'<select class="pagination-select">'
-                                                        +'<option value="5">5</option>'
-                                                        +'<option value="10">10</option>'
-                                                        +'<option value="15">15</option>'
-                                                        +'<option value="50">50</option>'
-                                                    +'</select>'
-                                                    +'<label></label>'
-                                                +'</div>'
+                                $('#createPasswordModal').html(
+                                '<div class="modal-content">'
+                                    +'<p>Для выбранного пользователя(ей) был сформирован новый пароль <br> Скопируйте и передайте учетные данные (логин и пароль родителя) пользователю</p>'
+                                    +'<div id="table-admin-lookup" class="table-admin">'
+                                        +'<div class="table-block table-block-admin">'
+                                            +'<table></table>'
+                                        +'</div>'
+                                        +'<div class="pagination-main-container">'
+                                            +'<div class="pagination-information">Показано <span class="pagination-before"></span>-<span class="pagination-after"></span> записи из <span class="pagination-all"></div>'
+                                            +'<div class="input-field pagination-select-container">'
+                                                +'<select class="pagination-select">'
+                                                    +'<option value="5">5</option>'
+                                                    +'<option value="10">10</option>'
+                                                    +'<option value="15">15</option>'
+                                                    +'<option value="50">50</option>'
+                                                +'</select>'
+                                                +'<label></label>'
                                             +'</div>'
                                         +'</div>'
                                     +'</div>'
-                                    +'<div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-blue btn-flat">Закрыть</a></div>');
-                                    let view = [
-                                        {name:'login',text:"Логин родителя", type:"text", func: null},
-                                        {name:'newPassword',text:"Пароль родителя", type:"text", func: null},
-                                        {name:'date',text:"Дата загрузки в ЛК", type:"text", func: null},
-                                        {name:'fio',text:"ФИО Родителя", type:"text", func: null},
-                                        {name:'fioChild',text:"ФИО ребенка", type:"minitable", func: null},
-                                        {name:'educationalInstitution',text:"Образовательная организация", type:"text", func: null},
-                                        {name:'class',text:"Класс", type:"text", func: null},
-                                    ],
-                                    table2 = new TableForm('#table-admin-lookup', view, false);
+                                +'</div>'
+                                +'<div class="modal-footer modal-footer-custom"><a href="#!" class="modal-close waves-effect waves-blue btn-flat">Закрыть</a></div>');
+                                let view = [
+                                    {name:'login',text:"Логин родителя", type:"text", func: null},
+                                    {name:'newPassword',text:"Пароль родителя", type:"text", func: null},
+                                    {name:'date',text:"Дата загрузки в ЛК", type:"text", func: null},
+                                    {name:'fio',text:"ФИО Родителя", type:"text", func: null},
+                                    {name:'fioChild',text:"ФИО ребенка", type:"minitable", func: null},
+                                    {name:'educationalInstitution',text:"Образовательная организация", type:"text", func: null},
+                                    {name:'class',text:"Класс", type:"text", func: null},
+                                ],
+                                table2 = new TableForm('#table-admin-lookup', view, false);
+                                if (table1.selectedItems.size == 1) {
                                     let arrData = [],
                                     date = new Date(),
                                     onevalue = table1.selectedItems.entries().next().value[1],
@@ -260,10 +283,62 @@
                                             });
                                             table2.buildAdnRenderData(arrData);
                                         }
-                                    });                        
+                                    });       
                                 }
                                 else {
-                                    $('#createPasswordModal').html('<div class="modal-content"><div class="modal-flex"><h5>Вы действительно хотите сформировать новые пароли для всех выбранных пользователей</h5></div>'
+                                    let selectUsers = unique(table1.selectedItems),
+                                    arrData = [];
+                                    let iterator = 0;
+                                    selectUsers.forEach(element => {
+                                        let date = new Date(),
+                                        onevalue = element,
+                                        newPassword = sessiontoken + date.getTime() + '' + Math.floor(Math.random() * Math.floor(100));
+                                        newPassword = newPassword.substr(newPassword.length - 8);
+                                        $.ajax({
+                                            type: 'POST', 
+                                            url: 'http://cab.permedu.ru/api/reset', 
+                                            headers: {
+                                                "Content-Type":"application/json",
+                                                "Accept":"*/*"
+                                            },
+                                            data: JSON.stringify({
+                                                "access_token": sessiontoken,
+                                                "parent_login":onevalue.login,
+                                                "parent_password": newPassword
+                                            }),
+                                            success: function(object){
+                                                arrData.push({
+                                                    login: onevalue.login,
+                                                    newPassword: newPassword,
+                                                    date: onevalue.date,
+                                                    fio: onevalue.fio,
+                                                    fioChild: onevalue.fioChild,
+                                                    educationalInstitution: onevalue.educationalInstitution,
+                                                    class: onevalue.class,
+                                                    id: onevalue.id
+                                                });
+                                                table2.buildAdnRenderData(arrData);
+                                                checkPrintBtn(selectUsers.length, iterator, arrData);
+                                                iterator++;
+                                            },
+                                            error: function (e) {
+                                                arrData.push({
+                                                    login: onevalue.login,
+                                                    newPassword: '<b style="color: red;">Не сгенерирован</b>',
+                                                    date: onevalue.date,
+                                                    fio: onevalue.fio,
+                                                    fioChild: onevalue.fioChild,
+                                                    educationalInstitution: onevalue.educationalInstitution,
+                                                    class: onevalue.class,
+                                                    id: onevalue.id
+                                                });
+                                                table2.buildAdnRenderData(arrData);
+                                                checkPrintBtn(selectUsers.length, iterator, arrData);
+                                                iterator++;
+                                            }
+                                        });  
+                                    });
+                                    /*$('#createPasswordModal').html('<div class="modal-content"><div class="modal-flex"><h5>Вы действительно хотите сформировать новые пароли для всех выбранных пользователей</h5></div>'
                                     +'<div class="modal-flex"><button class="btn btn-access">Да</button><button class="btn btn-no-access">Нет</button></div>'
                                     +'</div>');
                                     $('#createPasswordModal .btn-access').click(function(){
@@ -273,7 +348,7 @@
                                     $('#createPasswordModal .btn-no-access').click(function(){
                                         M.toast({html: "Отмена операции"});
                                         $('#createPasswordModal').modal('close');
-                                    });
+                                    });*/
                                 }
                             }
                             else {
