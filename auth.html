@@ -29,7 +29,9 @@
                     "Content-Type": "application/json"
                 },
                 async: false,
-                data: code,
+                data: {
+                    code: code
+                },
                 success: function(object){
                     if (object.access_token != undefined && object.access_token != null && object.access_token != "") {
                         let access_token = object.access_token;
