@@ -21,11 +21,12 @@
         let params = getParamsUrl();
         if (params.code != undefined && params.code != null && params.code != "") {
             let code = params.code;
-            $.ajax({
+            document.location.href = "http://cab.permedu.ru/auth.html?code="+code;
+            /*$.ajax({
                 type: 'POST', 
                 url: 'http://cab.permedu.ru/api/rsaagsession', 
                 headers: {
-                    "Accept":"*/*",
+                    "Accept":"",
                     "Content-Type": "application/json"
                 },
                 async: false,
@@ -64,7 +65,7 @@
                         document.location.href = "./login.html";
                     }
                 }
-            }); 
+            }); */
         }
     }
     init();
