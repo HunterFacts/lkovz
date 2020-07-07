@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<script src="js/jquery.js"></script>
 <script src="js/loading.js"></script>
 <html lang="ru">
 <head>
@@ -143,7 +144,6 @@
     </div>
     </footer>
 </body>
-<script src="js/jquery.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/main.js"></script>
 <script>
@@ -178,22 +178,6 @@
         return arrData;
     }
 
-    function getParamsUrl() {
-        var getParams;
-        // Если get-параметров много
-        if(window.location.search.indexOf('&') != -1){
-        getParams = window.location.search.split('&').map(function(item){
-            var currentValue = item.split('=');
-            return {[currentValue[0]]: currentValue[1]}
-        });
-        // если один
-        } else {
-        var currentValue = window.location.search.replace(/\?/, '').split('=');
-        getParams = {[currentValue[0]]: currentValue[1]};
-        }
-        return getParams;
-    }
-
     let child = '';
 
     function editformInit(){
@@ -220,7 +204,7 @@
                         $('#schoolChild').text(child.organization);
                         $('#classChild').text(child.unit);
                         $('#aoopChild').text(child.aoop);
-                        $('.sendObrashenie').html("<a class='btn' href='mailto:"+child.email+"?subject=Обращение пользователя "+object.fio+" «ЛК для учащихся с ОВЗ»'>Написать обращение</a>")
+                        $('.sendObrashenie').html("<a class='btn' style='margin-left: 10px;' href='mailto:"+child.email+"?subject=Обращение пользователя "+object.fio+" «ЛК для учащихся с ОВЗ»'>Написать обращение</a>")
                         if (child.escorts.length != 0) {
                             let view = [
                                 {name:'status',text:"Должность специалиста", type:"text", func: null},

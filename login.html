@@ -52,4 +52,10 @@
 <script src="js/jquery.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/main.js"></script>
+<script>
+    let params = getParamsUrl();
+    if (!isNull(params.expires) && params.expires) {
+        M.toast({html: 'Срок действия авторизации истек'});
+    }
+</script>
 </html>

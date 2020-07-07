@@ -403,6 +403,26 @@ function clearUserData() {
     document.location.href = "./login.html";
 }
 
+function getParamsUrl() {
+    var getParams;
+    // Если get-параметров много
+    if(window.location.search.indexOf('&') != -1){
+    getParams = window.location.search.split('&').map(function(item){
+        var currentValue = item.split('=');
+        return {[currentValue[0]]: currentValue[1]}
+    });
+    // если один
+    } else {
+    var currentValue = window.location.search.replace(/\?/, '').split('=');
+    getParams = {[currentValue[0]]: currentValue[1]};
+    }
+    return getParams;
+}
+
+function isNull (string){
+    return string == null || string == undefined || string == "";
+}
+
 $(document).ready(function(){
     function initApp(){
         $('.dynamic-dropdown-content').html('<li><a href="listform.html">Учащиеся с ОВЗ</a></li>'
