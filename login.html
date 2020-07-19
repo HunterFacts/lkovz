@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <script src="js/config.js"></script>
     <link rel="stylesheet" href="font/stylesheet.css">
     <link rel="stylesheet" href="css/main.min.css" class="notranslate">
     
@@ -37,7 +38,7 @@
         <center><h6>Личный кабинет для учащихся с ОВЗ</h6></center><br>
         <span>Вход в личный кабинет осуществляется через учетные записи рсааг</span><br>
         <br><br>
-        <center><a href="https://cabinet-test.permkrai.ru/oauth/authorize?client_id=36&redirect_uri=https://hunterfacts.github.io/lkovz/auth.html&response_type=code&scope=personal_data" class="btn">Войти через РСААГ</a></center>
+        <center><a class="btn rsaag-cabinet" >Войти через РСААГ</a></center>
     </div>
 </main>
 
@@ -57,5 +58,7 @@
     if (!isNull(params.expires) && params.expires) {
         M.toast({html: 'Срок действия авторизации истек'});
     }
+    let authURL = RSAAG_CABINET+'/oauth/authorize?client_id='+RSAAG_CLIENT_ID+'&redirect_uri='+RSAAG_REDIRECT_URI+'&response_type=code&scope=personal_data';
+    $('.rsaag-cabinet').attr("href", authURL);
 </script>
 </html>

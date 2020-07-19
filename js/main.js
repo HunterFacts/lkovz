@@ -378,7 +378,7 @@ function ping(ms) {
         setTimeout(function(){
             $.ajax({
                 type: 'GET', 
-                url: 'http://cab.permedu.ru/api/ping?text=1', 
+                url: BACKURL+'/api/ping?text=1', 
                 headers: {
                     "Content-Type":"application/json",
                     "Accept":"*/*"

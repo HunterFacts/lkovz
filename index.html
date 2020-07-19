@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+<script src="js/config.js"></script>
 <script src="js/jquery.js"></script>
 <script src="js/loading.js"></script>
 <script>function authCallback(){document.location.href = "./listform.html";}</script>
@@ -69,7 +70,7 @@
         login = $('#login').val();
         $.ajax({
             type: "POST",
-            url: "http://cab.permedu.ru/api/attach",
+            url: BACKURL+"/api/attach",
             headers: {
                     "Content-Type":"application/json",
                     "Accept":"*/*"
@@ -83,7 +84,7 @@
             if (msg.status == true) {
                 $.ajax({
                     type: "POST",
-                    url: "http://cab.permedu.ru/api/parent",
+                    url: BACKURL+"/api/parent",
                     headers: {
                             "Content-Type":"application/json",
                             "Accept":"*/*"

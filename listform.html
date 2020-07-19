@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <script src="js/config.js"></script>
     <link rel="stylesheet" href="font/stylesheet.css">
     <link rel="stylesheet" href="css/main.min.css" class="notranslate">
 
@@ -96,7 +97,7 @@
         sessiontoken = localStorage.getItem('session_token');
         $.ajax({
             type: 'POST', 
-            url: 'http://cab.permedu.ru/api/parent', 
+            url: BACKURL+'/api/parent', 
             headers: {
                 "Content-Type":"application/json",
                 "Accept":"*/*"

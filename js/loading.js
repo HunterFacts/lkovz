@@ -5,7 +5,7 @@ function initAuth(){
     if (!isNull(localStorage.getItem('session_token'))){
         $.ajax({
             type: 'POST', 
-            url: 'http://cab.permedu.ru/api/parent', 
+            url: BACKURL+'/api/parent', 
             headers: {
                 "Content-Type":"application/json",
                 "Accept":"*/*"

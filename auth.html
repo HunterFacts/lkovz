@@ -1,3 +1,4 @@
+<script src="js/config.js"></script>
 <script src="js/jquery.js"></script>
 <script src="js/materialize.js"></script>
 <script>
@@ -21,10 +22,10 @@
         let params = getParamsUrl();
         if (params.code != undefined && params.code != null && params.code != "") {
             let code = params.code;
-            document.location.href = "http://cab.permedu.ru/auth.html?code="+code;
+            document.location.href = BACKURL+"/auth.html?code="+code;
             /*$.ajax({
                 type: 'POST', 
-                url: 'http://cab.permedu.ru/api/rsaagsession', 
+                url: BACKURL+'/api/rsaagsession', 
                 headers: {
                     "Accept":"",
                     "Content-Type": "application/json"
